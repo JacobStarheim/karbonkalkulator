@@ -1,0 +1,132 @@
+# Environment and secrets
+.env*
+!.env.example
+*.pem
+*.key
+*.jks
+key.properties
+serviceAccountKey.json
+*-firebase-adminsdk-*.json
+local.properties
+/functions/.env
+
+# Dependencies
+node_modules/
+**/node_modules/
+**/ios/Pods/
+**/macos/Pods/
+.dart_tool/
+
+# Build output folders
+build/
+**/build/
+dist/
+out/
+.next/
+.swc/
+**/ios/**/DerivedData/
+**/android/app/build/
+build/Release
+
+# IDE / Editor specific files
+.idea/
+.vscode/
+*.iml
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Log files
+logs/
+*.log
+npm-debug.log*
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+firebase-debug.log
+firebase-debug.*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Cache files
+*.cache
+hosting/.cache
+.npm
+.eslintcache
+.stylelintcache
+*.tsbuildinfo
+.firebase/
+emulator-ui/
+
+# Flutter/Dart/Pub
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-preload-cache/
+.pub/
+**/doc/api/
+
+# Android/Gradle
+.gradle/
+**/android/.gradle/
+
+# iOS/XCode
+**/ios/**/xcuserdata/
+**/macos/xcuserdata/
+**/ios/**/*.mode1v3
+**/ios/**/*.mode2v3
+**/ios/**/*.moved-aside
+**/ios/**/*.pbxuser
+**/ios/**/*.perspectivev3
+**/ios/**/*sync/
+**/ios/**/.sconsign.dblite
+**/ios/**/.tags*
+**/ios/**/.vagrant/
+**/ios/**/Icon?
+**/ios/**/profile
+**/ios/.generated/
+**/ios/Flutter/.last_build_id
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/ephemeral/
+**/ios/Flutter/app.flx
+**/ios/Flutter/app.zip
+**/ios/Flutter/flutter_assets/
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/Runner/GeneratedPluginRegistrant.*
+
+# macOS Flutter
+**/macos/Flutter/ephemeral/
+**/macos/Flutter/GeneratedPluginRegistrant.swift
+
+# Windows Flutter
+**/windows/flutter/generated_plugin_registrant.cc
+**/windows/flutter/generated_plugin_registrant.h
+**/windows/flutter/generated_plugins.cmake
+
+# Linux Flutter
+**/linux/flutter/generated_plugin_registrant.cc
+**/linux/flutter/generated_plugin_registrant.h
+**/linux/flutter/generated_plugins.cmake
+
+# Firebase
+.firebaserc
+
+# Misc
+coverage/
+app.*.symbols
+*.swp
+.node_repl_history
+*.tgz
+firebase-*.zip
+
+
