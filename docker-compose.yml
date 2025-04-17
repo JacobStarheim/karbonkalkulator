@@ -9,7 +9,8 @@ services:
     volumes:
       - ./backend:/home/node/app
       - /home/node/app/node_modules
-    command: npm run dev
+      - /Users/jacob/.google-credentials/:/run/secrets:ro
+    command: npx nodemon --exec "npx ts-node src/server.ts"
     environment:
       - CHOKIDAR_USEPOLLING=true
 
