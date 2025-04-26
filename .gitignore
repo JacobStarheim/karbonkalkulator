@@ -9,6 +9,7 @@ serviceAccountKey.json
 *-firebase-adminsdk-*.json
 local.properties
 /functions/.env
+/firebase_token_test.html
 
 # Dependencies
 node_modules/
