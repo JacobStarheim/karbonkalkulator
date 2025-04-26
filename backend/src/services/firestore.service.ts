@@ -46,7 +46,5 @@ export async function getActivitiesFromDB(userId: string, limit: number): Promis
     }
 }
 
-//TODO: legge inn flere firestore services her
-
 
 
