@@ -1,19 +1,39 @@
 import 'dotenv/config'
-import express, {Request, Response, Application} from  'express';
+import express, {Application, Response, Request} from 'express';
+import { initializeApp } from 'firebase-admin/app';
 
-const app: Application = express();
-const port: number = parseInt(process.env.PORT || '3001', 10);
+import activityRoutes from './routes/activity.routes';
+import tipsRoutes from './routes/tips.routes';
+import { authMiddleware } from './middleware/auth.middleware';
 
-app.get('/', (req: Request, res: Response) => {
-    res.send('hello from backend')
-});
+function startServer() {
+    try {
+        initializeApp();
+        console.log('Firebase admin SDK initialized');
 
-app.listen(port, () => {
-    console.log('backend listening at http://localhost:${port}');
-});
+        const app: Application = express();
+        const port: number = parseInt(process.env.PORT || '3001', 10);
 
+        app.use(express.json());
 
+        app.get('/health', (req: Request, res: Response) => {
+            res.status(200).send('OK');
+        });
 
+        app.use('/api/activities', authMiddleware, activityRoutes);
+        app.use('/api/tips', tipsRoutes);
+
+        app.listen(port, () => {
+            console.log(`Backend server listening at http://localhost:${port}`)
+        });
+
+    } catch (error: any) {
+        console.error('Failed to start server: ', error);
+        process.exit(1);
+    }
+}
+
+startServer();
 
 
 
