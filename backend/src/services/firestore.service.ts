@@ -46,5 +46,22 @@ export async function getActivitiesFromDB(userId: string, limit: number): Promis
     }
 }
 
+export async function getActivityByIdFromDB(userId: string, activityId: string): Promise<ActivityRecord | null> {
+    try {
+        const docRef = db.collection('users').doc(userId).collection('activities').doc(activityId);
+        const docSnap = await docRef.get();
+
+        if (docSnap.exists) {
+            return { id: docSnap.id, ...docSnap.data() } as ActivityRecord;
+        } else {
+            console.log(`Activity with ID ${activityId} not found for user ${userId}.`);
+            return null;
+        }
+    } catch (error: any) {
+        console.error(`Error getting activity ${activityId} from Firestore for user ${userId}:`, error);
+        throw new Error('Failed to get activity from Firestore');
+    }
+}
+
 
 

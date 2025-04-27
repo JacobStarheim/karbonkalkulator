@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
 import {getCo2eForActivity} from '../services/climatiq.service';
-import {addActivitytoDB, getActivitiesFromDB} from '../services/firestore.service';
+import {addActivitytoDB, getActivitiesFromDB, getActivityByIdFromDB} from '../services/firestore.service';
 import {ActivityInput} from '../types/activity.types';
 
 export async function logActivity(req: Request, res: Response): Promise<void> {
@@ -59,6 +59,31 @@ export async function getAllActivities(req: Request, res: Response): Promise<voi
         res.status(500).send({ error: 'Internal Server Error', message: 'Failed to get activities.' });
     }
 }
+
+export async function getActivityById(req: Request, res: Response): Promise<void> {
+    const userId = req.user!.uid;
+    const activityId = req.params.activityId;
+
+    if (!activityId) {
+        res.status(400).send({error: 'Bad request', message: 'Acitvity ID missing in URl'});
+        return;
+    }
+    
+    try {
+        const activity = await getActivityByIdFromDB(userId, activityId);
+        if (activity) {
+            res.status(200).json(activity);
+        } else {
+            res.status(404).send({error: 'Not found', message: 'Activity not found.'});
+        }
+        
+    } catch (error: any) {
+        console.error(`Error in getActivityById controller for user ${userId}, activity ${activityId}:`, error);
+        res.status(500).send({ error: 'Internal Server Error', message: 'Failed to get activity.' });
+    }
+}
+
+
 
 
 
