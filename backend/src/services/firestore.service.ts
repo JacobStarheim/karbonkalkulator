@@ -1,9 +1,11 @@
 import {getFirestore, Timestamp, FieldValue} from 'firebase-admin/firestore';
 import {ActivityRecord, ActivityInput} from '../types/activity.types';
 
-const db = getFirestore();
+
 
 export async function addActivitytoDB(userId: string, activityData: ActivityInput, co2e: number): Promise<string> {
+    const db = getFirestore();
+
     // Firestore genererer id når vi kaller add()
     const recordToSave: Omit<ActivityRecord, 'id'> = {
         ...activityData,
@@ -24,6 +26,8 @@ export async function addActivitytoDB(userId: string, activityData: ActivityInpu
 }
 
 export async function getActivitiesFromDB(userId: string, limit: number): Promise<ActivityRecord[]> {
+    const db = getFirestore();
+
     try {
         const userActivitiesRef = db.collection('users').doc(userId).collection('activities');
         const snapshot = await userActivitiesRef.orderBy('timestamp', 'desc').limit(limit).get();
@@ -47,6 +51,8 @@ export async function getActivitiesFromDB(userId: string, limit: number): Promis
 }
 
 export async function getActivityByIdFromDB(userId: string, activityId: string): Promise<ActivityRecord | null> {
+    const db = getFirestore();
+
     try {
         const docRef = db.collection('users').doc(userId).collection('activities').doc(activityId);
         const docSnap = await docRef.get();
