@@ -3,7 +3,15 @@ import axios from 'axios';
 import {ActivityInput} from '../types/activity.types';
 import { ClimatiqSelector, ClimatiqParameters, ClimatiqEstimateResponse, ClimatiqEstimateInput } from '../types/climatiq.types';
 
-const NORWAY_EV_KWH_PER_KM = 0.2; //elbilforeningen/sintef
+
+const NORWAY_EV_KWH_PER_KM = 0.2; // Elbilforeningen/Sintef
+
+// Spar
+const NOK_PER_KG_BEEF = 250;
+const NOK_PER_KG_PORK = 150;
+const NOK_PER_KG_POULTRY = 150;
+const NOK_PER_KG_FISH = 225;
+const NOK_PER_KG_DAIRY = 50;
 
 function mapActivityToClimatiq(activityData: ActivityInput): ClimatiqEstimateInput | null {
     const { type, value, unit, region = 'NO'} = activityData;
@@ -14,80 +22,111 @@ function mapActivityToClimatiq(activityData: ActivityInput): ClimatiqEstimateInp
         // Transport
         case 'car_petrol_km':
             if (unit === 'km') {
-                // UK BEIS
-                selector = {activity_id: 'passenger_vehicle-vehicle_type_car-fuel_source_petrol-engine_size_na-vehicle_age_na-vehicle_weight_na'};
+                selector = {
+                    activity_id: 'passenger_vehicle-vehicle_type_car-fuel_source_petrol-engine_size_na-vehicle_age_na-vehicle_weight_na',
+                    source: 'BEIS',
+                    region: 'GB'
+                };
                 parameters = {distance: value, distance_unit: 'km'};
             }
             break;
+
         case 'car_diesel_km':
             if (unit === 'km') {
-                // UK BEIS 
-                selector = {activity_id: 'passenger_vehicle-vehicle_type_car-fuel_source_diesel-engine_size_na-vehicle_age_na-vehicle_weight_na'};
+                selector = {
+                    activity_id: 'passenger_vehicle-vehicle_type_car-fuel_source_diesel-engine_size_na-vehicle_age_na-vehicle_weight_na',
+                    source: 'BEIS',
+                    region: 'GB'
+                };
                 parameters = {distance: value, distance_unit: 'km'};
             }
             break;
+
         case 'car_electric_km':
             if (unit === 'km') {
                 // Regner distanse (km) til energiforbuk (kWh) før beregning
                 const totalenergyKwh = value * NORWAY_EV_KWH_PER_KM;
                 selector = {
-                     activity_id: 'electricity-energy_source_grid_mix',
+                     activity_id: 'electricity-supply_grid-source_production_mix',
                      region: region
                     };
                 parameters = {energy: totalenergyKwh, energy_unit: 'kWh'};
             }
             break;
-        case 'bus_local_km':
-            if (unit === 'km') {
-                 // UK BEIS 
-                selector = {activity_id: 'passenger_vehicle-vehicle_type_local_bus-fuel_source_na-engine_size_na-vehicle_age_na-vehicle_weight_na'};
-                parameters = {distance: value, distance_unit: 'km'};
-            }
-            break;
-        case 'train_national_km':
-            if (unit === 'km') {
-                // UK BEIS
-                selector = {activity_id: 'passenger_train-route_type_national_rail-fuel_source_na'};
-                parameters = {distance: value, distance_unit: 'km'};
-            }
-            break;
-        case 'flight_domestic_km':
-            if (unit === 'km') {
-                // UK BEIS
-                selector = {activity_id: 'passenger_flight-route_type_domestic-aircraft_type_na-class_economy'};
-                // 1 passasjer som standard
-                parameters = {passengers: 1, distance: value, distance_unit: 'km'};
-            }
-            break;
+
 
         // Energi
         case 'electricity_kwh':
             if (unit === 'kWh') {
-                // NO EXIOBASE
-                selector = {activity_id: 'electricity-energy_source_grid_mix', region: region};
+                selector = {
+                    activity_id: 'electricity-supply_grid-source_production_mix',
+                    region: region
+                };
                 parameters = { energy: value, energy_unit: 'kWh' };
             }
             break;
         
-        // varming hardkodet
 
-        // --- Mat ---
+        // fjernvarming hardkodet
+
+
+
+        // Mat
         case 'food_beef_kg':
             if (unit === 'kg') {
-                // Global EXIOBASE
-                selector = { activity_id: 'food_beverage-type_beef_meat', source: 'EXIOBASE'};
-                parameters = { weight: value, weight_unit: 'kg' };
-            }
-            break;
-        case 'food_chicken_kg':
-            if (unit === 'kg') {
-                // Global EXIOBASE
-                selector = { activity_id: 'food_beverage-type_poultry_meat', source: 'EXIOBASE', region: region };
-                parameters = { weight: value, weight_unit: 'kg' };
+            selector = {
+                activity_id: 'consumer_goods-type_meat_products_beef',
+                source: 'EXIOBASE',
+                region: 'NO'
+            };
+            parameters = {money: value * NOK_PER_KG_BEEF, money_unit: 'nok'};
             }
             break;
 
-            //melk hardkodet
+        case 'food_pork_kg':
+            if (unit === 'kg') {
+            selector = {
+                activity_id: 'consumer_goods-type_meat_products_pork',
+                source: 'EXIOBASE',
+                region: 'NO'
+            };
+            parameters = {money: value * NOK_PER_KG_PORK, money_unit: 'nok'};
+            }
+            break;
+
+        case 'food_poultry_kg':
+            if (unit === 'kg') {
+            selector = {
+                activity_id: 'consumer_goods-type_meat_products_poultry',
+                source: 'EXIOBASE',
+                region: 'NO'
+            };
+            parameters = {money: value * NOK_PER_KG_POULTRY, money_unit: 'nok'};
+            }
+            break;
+
+        case 'food_fish_kg':
+            if (unit === 'kg') {
+            selector = {
+                activity_id: 'consumer_goods-type_fish_products',
+                source: 'EXIOBASE',
+                region: 'NO'
+            };
+            parameters = {money: value * NOK_PER_KG_FISH, money_unit: 'nok'};
+            }
+            break;
+
+        case 'food_dairy_kg':
+            if (unit === 'kg') {
+            selector = {
+                activity_id: 'consumer_goods-type_dairy_products',
+                source: 'EXIOBASE',
+                region: 'NO'
+            };
+            parameters = {money: value * NOK_PER_KG_DAIRY, money_unit: 'nok'};
+            }
+            break;
+
 
         default:
             console.log(`Failed to map activity: ${type}`)
@@ -127,15 +166,24 @@ async function estimateRaw(selector: Omit<ClimatiqSelector, 'data_version'>, par
             console.log(`Received response from Climatiq: ${response.data}`);
             return response.data.co2e;
     } catch (error) {
-        console.error(`Climatiq API request failed: ${error}`);
+        if (axios.isAxiosError(error)) {
+            console.error('Climatiq API response data:', JSON.stringify(error.response?.data, null, 2));
+            console.error('Climatiq API response data:', error.response?.data);
+            if (!error.response) {
+                console.error('Climatiq API request error (no response):', error.message);
+            }
+        } else {
+            console.error('An unexpected error occurred in estimateRaw:', error);
+        }
         return null;
     }
 }
 
 
 const NORWAY_HEATING_CO2E_PER_KWH = 0.175; // Miljødirektoratet
-const NORWAY_MILK_CO2E_PER_KG = 1.2; // Melk LCA
-const LITER_MILK_TO_KG = 1.03;
+const NORWAY_BUS_CO2E_PER_KM             = 0.059;  // SSB
+const NORWAY_TRAIN_CO2E_PER_KM           = 0.0058; // SSB
+const NORWAY_DOMESTIC_FLIGHT_CO2E_PER_KM = 0.181;  // SSB
 
 export async function getCo2eForActivity(activityData: ActivityInput): Promise<number | null> {
     const {type, value, unit} = activityData;
@@ -143,36 +191,45 @@ export async function getCo2eForActivity(activityData: ActivityInput): Promise<n
 
     switch (type) {
         case 'district_heating_kwh':
-            if (unit === 'kWh') {
-                calculatedCo2e = value * NORWAY_HEATING_CO2E_PER_KWH;
-                return calculatedCo2e; 
-            } else {
-                console.log(`Invalid unit "${unit}" for direct calculation of district heating.`);
+            if (unit !== 'kWh') {
+                console.error(`Invalid unit for district_heating_kwh: ${unit}`);
                 return null;
             }
+            calculatedCo2e = value * NORWAY_HEATING_CO2E_PER_KWH;
+            break;
 
-        case 'food_milk_kg':
-            if (unit === 'kg') {
-                calculatedCo2e = value * NORWAY_MILK_CO2E_PER_KG;
-                return calculatedCo2e;
-            } else {
-                 console.log(`Invalid unit "${unit}" for direct calculation of milk by mass.`);
-                 return null;
+        case 'bus_local_km':
+            if (unit !== 'km') {
+                console.error(`Invalid unit for bus_local_km: ${unit}`);
+                return null;
             }
+            calculatedCo2e = value * NORWAY_BUS_CO2E_PER_KM;
+            break;
 
-        case 'food_milk_l':
-            if (unit === 'L') {
-                const kgValue = value * LITER_MILK_TO_KG; // Konverter liter til kg
-                calculatedCo2e = kgValue * NORWAY_MILK_CO2E_PER_KG;
-                return calculatedCo2e;
-            } else {
-                 console.log(`Invalid unit "${unit}" for direct calculation of milk by volume.`);
-                 return null;
+        case 'train_national_km':
+            if (unit !== 'km') {
+                console.error(`Invalid unit for train_national_km: ${unit}`);
+                return null;
             }
+            calculatedCo2e = value * NORWAY_TRAIN_CO2E_PER_KM;
+            break;
+
+        case 'flight_domestic_km':
+            if (unit !== 'km') {
+                console.error(`Invalid unit for flight_domestic_km: ${unit}`);
+                return null;
+            }
+            calculatedCo2e = value * NORWAY_DOMESTIC_FLIGHT_CO2E_PER_KM;
+            break;
     }
 
-    const climatiqInput = mapActivityToClimatiq(activityData);
 
+    if (calculatedCo2e !== null) {
+        return calculatedCo2e;
+    }
+
+    
+    const climatiqInput = mapActivityToClimatiq(activityData);
     if (!climatiqInput) {
         console.log(`Could not map activity ${type} to Climatiq parameters.`)
         return null;
