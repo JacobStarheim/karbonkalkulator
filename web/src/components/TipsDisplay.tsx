@@ -1,0 +1,51 @@
+'use client';
+
+import React from 'react';
+
+// Lim inn den kopierte dataen fra backend/src/controllers/tips.controller.ts her:
+const categorizedTips = [
+  {
+    category: 'Transport',
+    tips: [
+      'Bra jobba! Du kjørte 100 km med elbil (kun 4 kg CO₂e) - fortsett slik.',
+      'Flott valg å ta toget 50 km (2,5 kg CO₂e) denne uken!',
+      'Innenriksfly på 200 km ga 31,8 kg CO₂e - vurder tog fremfor fly for denne distansen når det er mulig.',
+      'Samkjør med venner eller kolleger på korte bilturer for å redusere utslipp per person.',
+    ]
+  },
+  {
+    category: 'Energi',
+    tips: [
+      'Ditt strømforbruk på 200 kWh (40 kg CO₂e) er moderat - husk å slå helt av lys og apparater når de ikke er i bruk.',
+      'Fjernvarme sto for 87,5 kg CO₂e - senk innetemperaturen med 1-2 °C og vurder tetting av vinduer/dører for mindre varmetap.',
+      'Installer termostatventiler eller smart termostat for automatisk temperaturstyring når du er ute eller sover.',
+    ]
+  },
+  {
+    category: 'Mat og Forbruk',
+    tips: [
+      'Flott at du spiste kylling istedenfor biff - det ga kun 18 kg CO₂e mot 120 kg fra oksekjøtt.',
+      'Oksekjøtt ga 120 kg CO₂e – prøv å erstatte én biffmiddag i uka med bønner, linser eller en plantebasert burger.',
+      'Melk sto for 12,36 kg CO₂e – vurder havremelk eller soyamelk, som har under 20 % av utslippet per liter.',
+      'Planlegg ukemenyer og frys ned overskuddsmat for å unngå matsvinn.',
+    ]
+  }
+];
+
+
+export default function TipsDisplay() {
+  return (
+    <div className="space-y-4"> {/* Legger til litt mellomrom mellom kategoriene */}
+      {categorizedTips.map((categoryItem) => (
+        <div key={categoryItem.category}>
+          <h3 className="text-md font-semibold mb-1 text-white-700">{categoryItem.category}</h3>
+          <ul className="list-disc list-inside space-y-1 text-sm text-white-600">
+            {categoryItem.tips.map((tip, index) => (
+              <li key={index}>{tip}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  );
+}

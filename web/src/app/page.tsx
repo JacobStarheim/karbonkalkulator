@@ -8,6 +8,9 @@ import {
     User,
 } from 'firebase/auth';
 import {auth} from '../lib/firebase/config';
+import ActivityForm from '../components/ActivityForm';
+import ActivityList from '../components/ActivityList';
+import TipsDisplay from '../components/TipsDisplay';
 
 export default function HomePage() {
     const [user, setUser] = useState<User | null>(null);
@@ -71,37 +74,27 @@ export default function HomePage() {
                     <p className="mb-2">Velkommen.</p>
                     <button
                         onClick={handleSignOut}
-                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                        className="bg-red-500 hover:bg-red-700 mb-2 text-white font-bold py-2 px-4 rounded"
                     >
                         Logg ut
                     </button>
                 </div>
 
-
                 <div className="mb-6 p-4 border border-gray-300 rounded">
                     <h2 className="text-lg font-semibold mb-2">Loggfør Aktivitet</h2>
-                    {/* ActivityForm her */}
-                    <p className="text-gray-500 italic">(Plassholder for ActivityForm)</p>
-                    {/* TODO: Vis kvittering her etter logging */}
-                </div>
-
-                {/* TODO: legge in activityform og activitylist */}
-                <div className="mt-6 p-4 border border-dashed border-gray-400">
-                    <p> Plassholder for Aktivitetslogging og Historikk - vises kun når innlogget</p>
+                    <ActivityForm />
                 </div>
 
 
                 <div className="mb-6 p-4 border border-gray-300 rounded">
                     <h2 className="text-lg font-semibold mb-2">Din Historikk</h2>
-                    {/* ActivityList her */}
-                    <p className="text-gray-500 italic">(Plassholder for ActivityList)</p>
-                    {/* TODO: Legg til totalberegning her */}
+                    <ActivityList />
                 </div>
 
 
-                <div className="mb-6 p-4 border border-gray-300 rounded">
+                <div className="mt-6 mb-6 p-4 border border-gray-300 rounded">
                     <h2 className="text-lg font-semibold mb-2">Tips for Lavere Utslipp</h2>
-                    {!showTips && ( // Vis knappen kun hvis tips er skjult
+                    {!showTips && (
                     <button
                         onClick={() => setShowTips(true)}
                         className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
@@ -110,15 +103,12 @@ export default function HomePage() {
                     </button>
                     )}
 
-
                     {showTips && (
-                        <div>
-                            {/* TODO: TipsComponent her */}
-                            <p className="text-gray-500 italic">(Plassholder for TipsComponent)</p>
-                            {/* TODO: Mulighet for å skjule tips igjen */}
-                        </div>
+                    <div>
+                        <TipsDisplay />
+                        {/* TODO: Mulighet for å skjule tips igjen? */}
+                    </div>
                     )}
-
                 </div>
             </>
 
